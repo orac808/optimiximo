@@ -1,7 +1,9 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DJ Harmonic Mixing Tool</title>
+    <title>OPTIMIXIMO</title>
     <style>
         * {
             margin: 0;
@@ -18,21 +20,21 @@
         }
         
         .container {
-            max-width: 909px;
+            max-width: 900px;
             margin: 0 auto;
         }
         
         h1 {
             text-align: center;
             margin-bottom: 10px;
-            color: #fff;
-            font-size: 24px;
+            color: #ffff00;
+            font-size: 40px;
         }
         
         .subtitle {
             text-align: center;
             margin-bottom: 25px;
-            color: #a0a0a0;
+            color: #c1c1c1;
             font-size: 14px;
         }
         
@@ -47,6 +49,10 @@
             .top-section {
                 grid-template-columns: 1fr;
             }
+            
+            .key-info {
+                display: none !important;
+            }
         }
         
         .selector-section, .keyboard-section {
@@ -59,34 +65,76 @@
         .section-title {
             font-size: 16px;
             margin-bottom: 15px;
-            color: #9090ff;
+            color: #ffff00;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
-        .current-key {
-            background: #2d2d44;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #999999;
         }
         
-        .current-key h2 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #9090ff;
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #3d3d54;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #6366f1;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(20px);
         }
         
         .key-info {
             padding-left: 10px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    flex-direction: column;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            flex-direction: column;
         }
         
         .key-badge {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #003eff 0%, #5c92f6 100%);
             color: white;
             padding: 15px 25px;
             border-radius: 10px;
@@ -120,15 +168,13 @@
             margin-top: 5px;
         }
         
-
-        
         .keyboard {
             display: flex;
-    background: #1a1a2e;
-    border-radius: 8px;
-    padding: 15px;
-    overflow-x: auto;
-    justify-content: space-evenly;
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+            justify-content: space-evenly;
         }
         
         .keyboard-container {
@@ -149,7 +195,7 @@
         }
         
         .white-key.active {
-            background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #003eff 0%, #5c92f6 100%);
         }
         
         .white-key .note-label {
@@ -195,7 +241,6 @@
             color: #fff;
         }
 
-        
         .transitions {
             background: #2d2d44;
             border-radius: 12px;
@@ -203,11 +248,6 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
         
-        .transitions h2 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #9090ff;
-        }
         
         .transition-grid {
             display: grid;
@@ -284,7 +324,7 @@
         
         .key-selector {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            grid-template-columns: repeat(4, minmax(60px, 1fr));
             gap: 8px;
         }
         
@@ -334,12 +374,7 @@
             border: 2px solid;
         }
     </style>
-<style id="__web-inspector-hide-shortcut-style__">
-.__web-inspector-hide-shortcut__, .__web-inspector-hide-shortcut__ *
-{
-    visibility: hidden !important;
-}
-</style></head>
+</head>
 <body>
     <div class="container">
         <h1>OPTIMIXIMO</h1>
@@ -347,65 +382,37 @@
         
         <div class="top-section">
             <div class="selector-section">
-                <h2 class="section-title">Select Key</h2>
+                <h2 class="section-title">
+                    <span>Select Key</span>
+                    <div class="toggle-switch">
+                        <span>Camelot</span>
+                        <label class="switch">
+                            <input type="checkbox" id="notationToggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Standard</span>
+                    </div>
+                </h2>
                 <div class="key-selector" id="keySelector"></div>
             </div>
             
             <div class="keyboard-section">
-                <h2 class="section-title">Keyboard View</h2>
+                <h2 class="section-title">Notes in said key</h2>
                 <div class="keyboard">
-                    <div class="keyboard-container" id="keyboard"><div class="key white-key active"><div class="note-label">C</div><div class="key black-key"><div class="note-label">Db</div></div></div><div class="key white-key active"><div class="note-label">D</div><div class="key black-key"><div class="note-label">Eb</div></div></div><div class="key white-key active"><div class="note-label">E</div></div><div class="key white-key active"><div class="note-label">F</div><div class="key black-key"><div class="note-label">Gb</div></div></div><div class="key white-key active"><div class="note-label">G</div><div class="key black-key"><div class="note-label">Ab</div></div></div><div class="key white-key active"><div class="note-label">A</div><div class="key black-key"><div class="note-label">Bb</div></div></div><div class="key white-key active"><div class="note-label">B</div></div></div>
-                <div class="key-info">
-                <div class="key-badge" id="currentCamelot">Am</div>
-                <div>
-                    <div class="music-notation" id="currentNotation" title="Click to toggle notation">8A</div>
-                    
+                    <div class="keyboard-container" id="keyboard"></div>
+                    <div class="key-info">
+                        <div class="key-badge" id="currentCamelot">8A</div>
+                        <div>
+                            <div class="music-notation" id="currentNotation" title="Click to toggle notation">A minor</div>
+                        </div>
+                    </div>
                 </div>
-            </div></div>
             </div>
         </div>
         
-        
-        
         <div class="transitions">
-            <h2>Compatible Transitions</h2>
-            <div class="transition-grid" id="transitionGrid"><div class="transition-item perfect">
-                    <div class="transition-left">
-                        <div class="transition-camelot" data-key="8A">Am</div>
-                        <div class="transition-key">8A</div>
-                    </div>
-                    <div class="transition-type perfect">Same Key</div>
-                </div><div class="transition-item perfect">
-                    <div class="transition-left">
-                        <div class="transition-camelot" data-key="9A">Em</div>
-                        <div class="transition-key">9A</div>
-                    </div>
-                    <div class="transition-type perfect">+1</div>
-                </div><div class="transition-item perfect">
-                    <div class="transition-left">
-                        <div class="transition-camelot" data-key="7A">Dm</div>
-                        <div class="transition-key">7A</div>
-                    </div>
-                    <div class="transition-type perfect">-1</div>
-                </div><div class="transition-item compatible">
-                    <div class="transition-left">
-                        <div class="transition-camelot" data-key="8B">C</div>
-                        <div class="transition-key">8B</div>
-                    </div>
-                    <div class="transition-type compatible">Relative</div>
-                </div><div class="transition-item energy">
-                    <div class="transition-left">
-                        <div class="transition-camelot" data-key="3A">B♭m</div>
-                        <div class="transition-key">3A</div>
-                    </div>
-                    <div class="transition-type energy">+7 Energy</div>
-                </div><div class="transition-item energy">
-                    <div class="transition-left">
-                        <div class="transition-camelot" data-key="10A">Bm</div>
-                        <div class="transition-key">10A</div>
-                    </div>
-                    <div class="transition-type energy">+2 Energy</div>
-                </div></div>
+            <h2 class="section-title">Compatible Transitions</h2>
+            <div class="transition-grid" id="transitionGrid"></div>
             <div class="legend">
                 <div class="legend-item">
                     <div class="legend-box perfect" style="border-color: #10b981;"></div>
@@ -451,9 +458,6 @@
             '12B': { key: 'E', notes: ['E', 'Gb', 'Ab', 'A', 'B', 'Db', 'Eb'] }
         };
 
-        const whiteKeys = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-        const allNotes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
-
         let currentKey = '8A';
         let showCamelotFirst = false;
 
@@ -467,7 +471,6 @@
             
             const normalized = activeNotes.map(normalizeNote);
 
-            // Define the correct piano layout starting from C
             const pianoLayout = [
                 { white: 'C', black: 'Db' },
                 { white: 'D', black: 'Eb' },
@@ -490,7 +493,6 @@
                 label.textContent = layout.white;
                 whiteKey.appendChild(label);
 
-                // Add black key if it exists
                 if (layout.black) {
                     const blackKey = document.createElement('div');
                     blackKey.className = 'key black-key';
@@ -510,75 +512,25 @@
             });
         }
 
-        function createWheel() {
-            const wheel = document.getElementById('wheel');
-            wheel.innerHTML = '';
-            
-            const keys = Object.keys(camelotWheel);
-            const radius = 110;
-            const centerX = 130;
-            const centerY = 130;
-            
-            keys.forEach((key, idx) => {
-                const angle = (idx * 30 - 90) * Math.PI / 180;
-                const x = centerX + radius * Math.cos(angle);
-                const y = centerY + radius * Math.sin(angle);
-                
-                const keyEl = document.createElement('div');
-                keyEl.className = 'wheel-key';
-                keyEl.textContent = key;
-                keyEl.style.left = (x - 21) + 'px';
-                keyEl.style.top = (y - 21) + 'px';
-                keyEl.onclick = () => selectKey(key);
-                
-                wheel.appendChild(keyEl);
-            });
-        }
-
-        function updateWheelHighlights() {
-            const transitions = getTransitions(currentKey);
-            const transitionMap = {};
-            
-            transitions.forEach(t => {
-                transitionMap[t.camelot] = t.type;
-            });
-            
-            document.querySelectorAll('.wheel-key').forEach(keyEl => {
-                const key = keyEl.textContent;
-                keyEl.className = 'wheel-key';
-                
-                if (key === currentKey) {
-                    keyEl.classList.add('current');
-                } else if (transitionMap[key]) {
-                    keyEl.classList.add(transitionMap[key]);
-                }
-            });
-        }
-
         function getTransitions(camelot) {
             const num = parseInt(camelot);
             const letter = camelot.slice(-1);
             
             const transitions = [];
             
-            // Same key
             transitions.push({ camelot, type: 'perfect', desc: 'Same Key' });
             
-            // +1 and -1
             const next = ((num % 12) + 1).toString() + letter;
             const prev = ((num - 2 + 12) % 12 + 1).toString() + letter;
             transitions.push({ camelot: next, type: 'perfect', desc: '+1' });
             transitions.push({ camelot: prev, type: 'perfect', desc: '-1' });
             
-            // Relative major/minor
             const relative = num.toString() + (letter === 'A' ? 'B' : 'A');
             transitions.push({ camelot: relative, type: 'compatible', desc: 'Relative' });
             
-            // +7 (Dominant)
             const plus7 = (((num + 6) % 12) + 1).toString() + letter;
             transitions.push({ camelot: plus7, type: 'energy', desc: '+7 Energy' });
             
-            // +2 (Energy boost)
             const plus2 = (((num + 1) % 12) + 1).toString() + letter;
             transitions.push({ camelot: plus2, type: 'energy', desc: '+2 Energy' });
             
@@ -597,7 +549,6 @@
                 camelotBadge.textContent = currentKey;
             }
             
-            // Update key selector buttons
             document.querySelectorAll('.key-button').forEach(btn => {
                 const key = btn.dataset.key;
                 if (showCamelotFirst) {
@@ -607,7 +558,6 @@
                 }
             });
             
-            // Update transition labels
             document.querySelectorAll('.transition-item').forEach(item => {
                 const camelotEl = item.querySelector('.transition-camelot');
                 const keyEl = item.querySelector('.transition-key');
@@ -676,9 +626,10 @@
         }
 
         document.getElementById('currentNotation').onclick = toggleNotation;
+        document.getElementById('notationToggle').onchange = toggleNotation;
         
         initKeySelector();
         updateDisplay();
     </script>
-
-</body></html>
+</body>
+</html>
