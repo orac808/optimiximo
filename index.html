@@ -377,13 +377,22 @@
 </head>
 <body>
     <div class="container">
+        <div id="masthead">
         <h1>OPTIMIXIMO</h1>
         <p class="subtitle">Select a key to see compatible transitions</p>
-        
+    </div>
         <div class="top-section">
             <div class="selector-section">
                 <h2 class="section-title">
                     <span>Select Key</span>
+                    <div class="toggle-switch">
+                        <span>🎹</span>
+                        <label class="switch">
+                            <input type="checkbox" id="modeToggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span>🎚️</span>
+                    </div>
                     <div class="toggle-switch">
                         <span>Camelot</span>
                         <label class="switch">
@@ -396,7 +405,7 @@
                 <div class="key-selector" id="keySelector"></div>
             </div>
             
-            <div class="keyboard-section">
+            <div class="keyboard-section" id="keyboardSection">
                 <h2 class="section-title">Notes in said key</h2>
                 <div class="keyboard">
                     <div class="keyboard-container" id="keyboard"></div>
@@ -460,6 +469,7 @@
 
         let currentKey = '8A';
         let showCamelotFirst = false;
+        let focusMode = false;
 
         function normalizeNote(note) {
             return note.replace('♯', 'b').replace('#', 'b');
@@ -577,7 +587,24 @@
             showCamelotFirst = !showCamelotFirst;
             updateNotationDisplay();
         }
+        function toggleMode() {
+            focusMode = !focusMode;
+            updateModeDisplay();
+        }
+        function updateModeDisplay() {
+            const keyboardsection = document.getElementById('keyboardSection');
 
+            if(focusMode) {
+                keyboardsection.style.display = "none";
+                masthead.style.display = "none";
+            }
+            else {
+                 keyboardsection.style.display = "block";
+                 masthead.style.display = "block";
+    
+            }
+        
+        }
         function updateDisplay() {
             updateNotationDisplay();
             createKeyboard(camelotWheel[currentKey].notes);
@@ -627,6 +654,7 @@
 
         document.getElementById('currentNotation').onclick = toggleNotation;
         document.getElementById('notationToggle').onchange = toggleNotation;
+        document.getElementById('modeToggle').onchange = toggleMode;
         
         initKeySelector();
         updateDisplay();
