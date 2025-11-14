@@ -18,7 +18,9 @@
             padding: 15px;
             min-height: 100vh;
         }
-        
+        body.focus{
+            padding: 0px;
+        }
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -321,6 +323,10 @@
             background: rgba(245, 158, 11, 0.2);
             color: #f59e0b;
         }
+
+        #transTitle.focus{
+            display: none;
+        }
         
         .key-selector {
             display: grid;
@@ -351,7 +357,7 @@
             color: white;
         }
         
-        .legend {
+        #legend {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
@@ -359,6 +365,10 @@
             padding-top: 15px;
             border-top: 1px solid #3d3d54;
             font-size: 13px;
+        }
+
+        #legend.focus {
+            display: none;
         }
         
         .legend-item {
@@ -420,9 +430,9 @@
         </div>
         
         <div class="transitions">
-            <h2 class="section-title">Compatible Transitions</h2>
+            <h2 class="section-title" id="transTitle">Compatible Transitions</h2>
             <div class="transition-grid" id="transitionGrid"></div>
-            <div class="legend">
+            <div id="legend">
                 <div class="legend-item">
                     <div class="legend-box perfect" style="border-color: #10b981;"></div>
                     <span>Perfect (+/-1)</span>
@@ -593,6 +603,13 @@
         }
         function updateModeDisplay() {
             const keyboardsection = document.getElementById('keyboardSection');
+            const legend = document.getElementById('legend');
+            const body = document.body;
+            const transTitle = document.getElementById('transTitle'); 
+
+            legend.classList.toggle('focus');
+            body.classList.toggle('focus');
+            transTitle.classList.toggle('focus');
 
             if(focusMode) {
                 keyboardsection.style.display = "none";
